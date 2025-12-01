@@ -88,7 +88,6 @@ function endGame(box1, box2, box3){
         clearInterval(wait)
         resetGame();
     }, 4000)
-
 };
 
 function resetGame(){
