@@ -1,5 +1,12 @@
 const title = document.querySelector(".title span");
 const squares = document.querySelectorAll(".squares div");
+const board = document.querySelector(".board");
+const btn1v1 = document.getElementById("p1v1");
+const btn1vai = document.getElementById("p1vai");
+const x = document.querySelector(".x");
+const o = document.querySelector(".o");
+
+
 
 function checkWin(){
 
@@ -43,6 +50,13 @@ function checkWin(){
 
 function checkDraw(){
     if([...squares].every(box => box.innerHTML !== "")){
+        squares.forEach(drawBox => {
+            drawBox.style.transition = "0.6s";
+            drawBox.style.border = "#eed6209f";
+            drawBox.style.boxShadow = "0 0 14px #eed6209f inset";
+            drawBox.style.textShadow = "0 0 10px #eed6209f";
+            drawBox.style.color = "#eed6209f";
+        });
         finish = true;
         title.innerHTML = "Draw!";
         let dotRepeat = setInterval(() => {
@@ -54,8 +68,20 @@ function checkDraw(){
         }, 4000);
     };
 };
+let xwins = 1;
+let owins = 1;
+function scores(char){
+    if(char === "X") {
+        x.innerHTML = `X: ${xwins++}`;
+
+    }else if(char === "O"){
+        o.innerHTML = `${owins++} :O`;
+
+    }
+}
 
 function endGame(box1, box2, box3){
+    scores(box1.innerHTML);
     box1.style.transition = "0.6s";
     box1.style.border = "#0f0";
     box1.style.boxShadow = "0 0 14px #0f0 inset";
@@ -104,7 +130,7 @@ function resetGame(){
 let turn = "X";
 let finish = false;
 
-function gamePlay(id){
+function gamePlayAi(id){
 
     let box = document.getElementById(id);
     let playTurn = false;
@@ -147,6 +173,30 @@ function gamePlay(id){
 
 };
 
+function gamePlayFriend(id){
+    let box = document.getElementById(id);
+    if(box.innerHTML == "" && turn == "X"){
+        box.innerHTML = turn;
+        turn = "O";
+        title.innerHTML = turn;
+        checkWin();
+        if(finish) {
+            finish = false;
+            return;
+        };
+    };
+    if(box.innerHTML == "" && turn == "O"){
+        box.innerHTML = turn;
+        turn = "X";
+        title.innerHTML = turn;
+        checkWin();
+        if(finish) {
+            finish = false;
+            return;
+        };
+    };
+}
+
 function getBestMove(player){
     for(let i = 0; i < squares.length; i++){
         if(squares[i].innerHTML === ""){
@@ -174,8 +224,20 @@ function isWinner(player){
     });
 };
 
-squares.forEach(box => {
+btn1v1.addEventListener("click", () => {
+    board.style.display = "none";
+    squares.forEach(box => {
     box.addEventListener("click", () => {
-        gamePlay(box.id)
+        gamePlayFriend(box.id)
     });
 });
+});
+btn1vai.addEventListener("click", () => {
+    board.style.display = "none";
+    squares.forEach(box => {
+    box.addEventListener("click", () => {
+        gamePlayAi(box.id)
+    });
+});
+});
+
